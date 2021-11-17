@@ -370,15 +370,17 @@ namespace netDxf.Entities
         /// <returns>A local point on the ellipse for the given angle relative to the center.</returns>
         public Vector2 PolarCoordinate(double angle)
         {
+
             double a = this.MajorAxis * 0.5;
             double b = this.MinorAxis * 0.5;
-            double radians = angle * MathHelper.DegToRad;
+            double radians = (angle+this.Rotation) * MathHelper.DegToRad;
 
             double a1 = a * Math.Sin(radians);
             double b1 = b * Math.Cos(radians);
 
             double radius = (a * b) / Math.Sqrt(b1 * b1 + a1 * a1);
 
+            
             // convert the radius back to Cartesian coordinates
             return new Vector2(radius * Math.Cos(radians)+center.X, radius * Math.Sin(radians) + center.Y);
         }

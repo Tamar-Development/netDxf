@@ -364,6 +364,26 @@ namespace netDxf.Entities
         }
 
         /// <summary>
+        /// Calculate the local point on the ellipse for a given angle.
+        /// </summary>
+        /// <param name="angle">Angle in degrees.</param>
+        /// <returns>A local point on the ellipse for the given angle relative to the center.</returns>
+        public Vector2 PolarCoordinate(double angle)
+        {
+            double a = this.MajorAxis * 0.5;
+            double b = this.MinorAxis * 0.5;
+            double radians = angle * MathHelper.DegToRad;
+
+            double a1 = a * Math.Sin(radians);
+            double b1 = b * Math.Cos(radians);
+
+            double radius = (a * b) / Math.Sqrt(b1 * b1 + a1 * a1);
+
+            // convert the radius back to Cartesian coordinates
+            return new Vector2(radius * Math.Cos(radians)+center.X, radius * Math.Sin(radians) + center.Y);
+        }
+
+        /// <summary>
         /// Converts the ellipse in a list of vertexes.
         /// </summary>
         /// <param name="precision">Number of vertexes generated.</param>
@@ -413,8 +433,8 @@ namespace netDxf.Entities
                 double sinAlpha = Math.Sin(angle);
                 double cosAlpha = Math.Cos(angle);
 
-                double pointX = 0.5 * (this.majorAxis * cosAlpha * cosBeta - this.minorAxis * sinAlpha * sinBeta);
-                double pointY = 0.5 * (this.majorAxis * cosAlpha * sinBeta + this.minorAxis * sinAlpha * cosBeta);
+                double pointX = 0.5 * (this.majorAxis * cosAlpha * cosBeta - this.minorAxis * sinAlpha * sinBeta) +this.center.X;
+                double pointY = 0.5 * (this.majorAxis * cosAlpha * sinBeta + this.minorAxis * sinAlpha * cosBeta) + this.center.Y;
 
                 points.Add(new Vector2(pointX, pointY));
             }
@@ -452,6 +472,36 @@ namespace netDxf.Entities
 
             return poly;
         }
+
+        /*
+        public List<Vector3> ToVector3List(double startAngle, double endAngle)
+        {
+            double step = 2 * Math.PI / 200;
+
+            startAngle = ConvertToRadians(ellipse.StartAngle + ellipse.Rotation);
+            endAngle = ConvertToRadians(ellipse.EndAngle + ellipse.Rotation);
+
+            if (ellipse.StartAngle > ellipse.EndAngle)
+            {
+                endAngle = ConvertToRadians(ellipse.EndAngle + ellipse.Rotation + 360);
+            }
+
+            var h = ellipse.Center.X;
+            var k = ellipse.Center.Y;
+            var rotation = ellipse.Rotation;
+            var a = ellipse.MajorAxis;
+            var b = ellipse.MinorAxis;
+
+            for (double theta = startAngle; theta < endAngle; theta += step)
+            {
+                var x = a / 2 * Math.Cos(theta) + h;
+                var y = b / 2 * Math.Sin(theta) + k;
+
+                oxyline.Points.Add(new DataPoint(x, y));
+            }
+        }
+        */
+
 
         #endregion
 

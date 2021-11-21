@@ -339,6 +339,16 @@ namespace netDxf.Entities
             get { return MathHelper.IsEqual(this.startAngle, this.endAngle); }
         }
 
+
+        public Vector2 StartPoint
+        {
+            get { return this.PolarCoordinate(this.StartAngle); }
+        }
+
+        public Vector2 EndPoint
+        {
+            get { return this.PolarCoordinate(this.EndAngle); }
+        }
         #endregion
 
         #region public methods
@@ -383,6 +393,25 @@ namespace netDxf.Entities
             
             // convert the radius back to Cartesian coordinates
             return new Vector2(radius * Math.Cos(radians)+center.X, radius * Math.Sin(radians) + center.Y);
+        }
+
+
+        /// <summary>
+        /// Gets a point on the ellipse and returns the angle of the point from ellipse center. 
+        /// </summary>
+        /// <param name="PolarPoint"> a point on the ellipse</param>
+        /// <returns>angle of the point from ellipse center</returns>
+        public double CoordinateToAngle(Vector2 PolarPoint)
+        {
+            Vector2 pointRelativeToCenter = new Vector2(PolarPoint.X - Center.X, PolarPoint.Y - Center.Y);
+            Vector2 v1 = new Vector2(1, 0);
+            double degAngle= Vector2.AngleBetween(pointRelativeToCenter, v1) * MathHelper.RadToDeg;
+
+            if (pointRelativeToCenter.X < 0 && pointRelativeToCenter.Y < 0) //if point is on the third qurter we need to get the opposite  angle
+                degAngle = 360 - degAngle;
+
+           
+            return degAngle;
         }
 
         /// <summary>

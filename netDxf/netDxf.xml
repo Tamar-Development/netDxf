@@ -5437,6 +5437,13 @@
             <param name="angle">Angle in degrees.</param>
             <returns>A local point on the ellipse for the given angle relative to the center.</returns>
         </member>
+        <member name="M:netDxf.Entities.Ellipse.CoordinateToAngle(netDxf.Vector2)">
+            <summary>
+            Gets a point on the ellipse and returns the angle of the point from ellipse center. 
+            </summary>
+            <param name="PolarPoint"> a point on the ellipse</param>
+            <returns>angle of the point from ellipse center</returns>
+        </member>
         <member name="M:netDxf.Entities.Ellipse.PolygonalVertexes(System.Int32)">
             <summary>
             Converts the ellipse in a list of vertexes.

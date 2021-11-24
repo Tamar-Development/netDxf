@@ -167,9 +167,7 @@ namespace netDxf.IO
             if (version < DxfVersion.AutoCad2007)
             {
 
-#if !NET45
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-#endif
+
 
                 string dwgCodePage = CheckHeaderVariable(stream, HeaderVariableCode.DwgCodePage, out this.isBinary);
                 if (string.IsNullOrEmpty(dwgCodePage))

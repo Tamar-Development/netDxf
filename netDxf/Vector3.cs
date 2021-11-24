@@ -668,6 +668,11 @@ namespace netDxf
             return new[] {this.x, this.y, this.z};
         }
 
+        public Vector2 ToVector2()
+        {
+            return new Vector2(this.X, this.Y);
+        }
+
         #endregion
 
         #region comparison methods

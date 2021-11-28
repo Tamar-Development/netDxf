@@ -735,6 +735,15 @@ namespace netDxf
 
             return false;
         }
+        public  bool Equals(Vector2 other)
+        {
+            if (other is Vector2 vector)
+            {
+                return this.ToVector2().Equals(vector);
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Returns the hash code for this instance.

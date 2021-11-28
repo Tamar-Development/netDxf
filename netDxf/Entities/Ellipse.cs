@@ -410,7 +410,9 @@ namespace netDxf.Entities
             if (pointRelativeToCenter.X <= 0 && pointRelativeToCenter.Y <= 0) //if point is on the third qurter we need to get the opposite  angle
                 degAngle = 360 - degAngle;
 
-           
+            if (pointRelativeToCenter.X >= 0 && pointRelativeToCenter.Y <= 0) //if point is on the fourth qurter we need to 
+                degAngle = 270 + (90 - degAngle);
+
             return degAngle;
         }
 

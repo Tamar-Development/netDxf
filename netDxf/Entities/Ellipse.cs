@@ -524,9 +524,23 @@ namespace netDxf.Entities
             Vector2 normalized = new Vector2(point.X - Center.X,
                                          point.Y - Center.Y);
 
-            return ((double)(normalized.X * normalized.X)
+            bool onEllipse= ((double)(normalized.X * normalized.X)
                      / (_xRadius * _xRadius)) + ((double)(normalized.Y * normalized.Y) / (_yRadius * _yRadius))
                 <= 1.0;
+
+            if (onEllipse)
+            {
+                double point_angle = this.CoordinateToAngle(point);
+                if (this.StartAngle > this.EndAngle)// if start angle is grater than end angle add 360
+                {
+                    return this.StartAngle < point_angle && (this.EndAngle + 360) > point_angle;
+                }
+                else
+                {
+                    return this.StartAngle < point_angle && (this.EndAngle) > point_angle;
+                }
+            }
+            return false;
         }
 
         #endregion

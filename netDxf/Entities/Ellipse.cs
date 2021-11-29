@@ -102,7 +102,7 @@ namespace netDxf.Entities
                 if (double.IsNaN(lambda)) return null; // conic coefficients cannot be found, duplicate points
 
                 double[] coefficients = new double[6];
-                coefficients[0] = alphaBeta[0] + lambda * gammaDelta[0];          
+                coefficients[0] = alphaBeta[0] + lambda * gammaDelta[0];
                 coefficients[1] = alphaBeta[1] + lambda * gammaDelta[1];
                 coefficients[2] = alphaBeta[2] + lambda * gammaDelta[2];
                 coefficients[3] = alphaBeta[3] + lambda * gammaDelta[3];
@@ -113,14 +113,14 @@ namespace netDxf.Entities
             }
 
             public static bool EllipseProperties(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4, Vector2 point5, out Vector2 center, out double semiMajorAxis, out double semiMinorAxis, out double rotation)
-            {         
+            {
                 center = Vector2.NaN;
                 semiMajorAxis = double.NaN;
                 semiMinorAxis = double.NaN;
                 rotation = double.NaN;
 
                 double[] coefficients = ConicCoefficients(point1, point2, point3, point4, point5);
-                if(coefficients == null) return false;
+                if (coefficients == null) return false;
 
                 double a = coefficients[0];
                 double b = coefficients[1];
@@ -130,7 +130,7 @@ namespace netDxf.Entities
                 double f = coefficients[5];
 
                 double q = b * b - 4 * a * c;
-                           
+
                 if (q >= 0) return false; // not an ellipse
 
                 center.X = (2 * c * d - b * e) / q;
@@ -383,16 +383,16 @@ namespace netDxf.Entities
 
             double a = this.MajorAxis * 0.5;
             double b = this.MinorAxis * 0.5;
-            double radians = (angle+this.Rotation) * MathHelper.DegToRad;
+            double radians = (angle + this.Rotation) * MathHelper.DegToRad;
 
             double a1 = a * Math.Sin(radians);
             double b1 = b * Math.Cos(radians);
 
             double radius = (a * b) / Math.Sqrt(b1 * b1 + a1 * a1);
 
-            
+
             // convert the radius back to Cartesian coordinates
-            return new Vector2(radius * Math.Cos(radians)+center.X, radius * Math.Sin(radians) + center.Y);
+            return new Vector2(radius * Math.Cos(radians) + center.X, radius * Math.Sin(radians) + center.Y);
         }
 
 
@@ -405,7 +405,7 @@ namespace netDxf.Entities
         {
             Vector2 pointRelativeToCenter = new Vector2(PolarPoint.X - Center.X, PolarPoint.Y - Center.Y);
             Vector2 v1 = new Vector2(1, 0);
-            double degAngle= Vector2.AngleBetween(pointRelativeToCenter, v1) * MathHelper.RadToDeg;
+            double degAngle = Vector2.AngleBetween(pointRelativeToCenter, v1) * MathHelper.RadToDeg;
 
             if (pointRelativeToCenter.X <= 0 && pointRelativeToCenter.Y <= 0) //if point is on the third qurter we need to get the opposite  angle
                 degAngle = 360 - degAngle;
@@ -457,16 +457,16 @@ namespace netDxf.Entities
                 }
                 steps = precision - 1;
             }
-           
+
             double delta = (end - start) / steps;
 
             for (int i = 0; i < precision; i++)
             {
-                double angle = start + delta*i;
+                double angle = start + delta * i;
                 double sinAlpha = Math.Sin(angle);
                 double cosAlpha = Math.Cos(angle);
 
-                double pointX = 0.5 * (this.majorAxis * cosAlpha * cosBeta - this.minorAxis * sinAlpha * sinBeta) +this.center.X;
+                double pointX = 0.5 * (this.majorAxis * cosAlpha * cosBeta - this.minorAxis * sinAlpha * sinBeta) + this.center.X;
                 double pointY = 0.5 * (this.majorAxis * cosAlpha * sinBeta + this.minorAxis * sinAlpha * cosBeta) + this.center.Y;
 
                 points.Add(new Vector2(pointX, pointY));
@@ -486,11 +486,11 @@ namespace netDxf.Entities
             Vector3 ocsCenter = MathHelper.Transform(this.center, this.Normal, CoordinateSystem.World, CoordinateSystem.Object);
             LwPolyline poly = new LwPolyline
             {
-                Layer = (Layer) this.Layer.Clone(),
-                Linetype = (Linetype) this.Linetype.Clone(),
-                Color = (AciColor) this.Color.Clone(),
+                Layer = (Layer)this.Layer.Clone(),
+                Linetype = (Linetype)this.Linetype.Clone(),
+                Color = (AciColor)this.Color.Clone(),
                 Lineweight = this.Lineweight,
-                Transparency = (Transparency) this.Transparency.Clone(),
+                Transparency = (Transparency)this.Transparency.Clone(),
                 LinetypeScale = this.LinetypeScale,
                 Normal = this.Normal,
                 Elevation = ocsCenter.Z,
@@ -506,35 +506,28 @@ namespace netDxf.Entities
             return poly;
         }
 
-        /*
-        public List<Vector3> ToVector3List(double startAngle, double endAngle)
+
+        public bool Contains(Vector2 point)
         {
-            double step = 2 * Math.PI / 200;
 
-            startAngle = ConvertToRadians(ellipse.StartAngle + ellipse.Rotation);
-            endAngle = ConvertToRadians(ellipse.EndAngle + ellipse.Rotation);
+            double _xRadius = this.MajorAxis / 2;
+            double _yRadius = this.MinorAxis / 2;
 
-            if (ellipse.StartAngle > ellipse.EndAngle)
-            {
-                endAngle = ConvertToRadians(ellipse.EndAngle + ellipse.Rotation + 360);
-            }
 
-            var h = ellipse.Center.X;
-            var k = ellipse.Center.Y;
-            var rotation = ellipse.Rotation;
-            var a = ellipse.MajorAxis;
-            var b = ellipse.MinorAxis;
+            if (_xRadius <= 0.0 || _yRadius <= 0.0)
+                return false;
+            /* This is a more general form of the circle equation
+             *
+             * X^2/a^2 + Y^2/b^2 <= 1
+             */
 
-            for (double theta = startAngle; theta < endAngle; theta += step)
-            {
-                var x = a / 2 * Math.Cos(theta) + h;
-                var y = b / 2 * Math.Sin(theta) + k;
+            Vector2 normalized = new Vector2(point.X - Center.X,
+                                         point.Y - Center.Y);
 
-                oxyline.Points.Add(new DataPoint(x, y));
-            }
+            return ((double)(normalized.X * normalized.X)
+                     / (_xRadius * _xRadius)) + ((double)(normalized.Y * normalized.Y) / (_yRadius * _yRadius))
+                <= 1.0;
         }
-        */
-
 
         #endregion
 
@@ -559,13 +552,13 @@ namespace netDxf.Entities
             Vector2 p2 = new Vector2(semiMajorAxis, semiMinorAxis);
             Vector2 p3 = new Vector2(-semiMajorAxis, -semiMinorAxis);
             Vector2 p4 = new Vector2(semiMajorAxis, -semiMinorAxis);
-            List<Vector2> ocsPoints = MathHelper.Transform(new[] {p1, p2, p3, p4}, this.Rotation * MathHelper.DegToRad, CoordinateSystem.Object, CoordinateSystem.World);
+            List<Vector2> ocsPoints = MathHelper.Transform(new[] { p1, p2, p3, p4 }, this.Rotation * MathHelper.DegToRad, CoordinateSystem.Object, CoordinateSystem.World);
 
             Vector3 p1Prime = new Vector3(ocsPoints[0].X, ocsPoints[0].Y, 0.0);
             Vector3 p2Prime = new Vector3(ocsPoints[1].X, ocsPoints[1].Y, 0.0);
             Vector3 p3Prime = new Vector3(ocsPoints[2].X, ocsPoints[2].Y, 0.0);
             Vector3 p4Prime = new Vector3(ocsPoints[3].X, ocsPoints[3].Y, 0.0);
-            List<Vector3> wcsPoints = MathHelper.Transform(new[] {p1Prime, p2Prime, p3Prime, p4Prime}, this.Normal, CoordinateSystem.Object, CoordinateSystem.World);
+            List<Vector3> wcsPoints = MathHelper.Transform(new[] { p1Prime, p2Prime, p3Prime, p4Prime }, this.Normal, CoordinateSystem.Object, CoordinateSystem.World);
             for (int i = 0; i < wcsPoints.Count; i++)
             {
                 wcsPoints[i] += this.Center;
@@ -581,7 +574,7 @@ namespace netDxf.Entities
             }
 
             List<Vector3> rectPoints = MathHelper.Transform(wcsPoints, newNormal, CoordinateSystem.World, CoordinateSystem.Object);
-            
+
             // corners of the transformed rectangle that circumscribe the new ellipse        
             Vector2 pointA = new Vector2(rectPoints[0].X, rectPoints[0].Y);
             Vector2 pointB = new Vector2(rectPoints[1].X, rectPoints[1].Y);
@@ -608,12 +601,12 @@ namespace netDxf.Entities
 
             // find the fifth point in the ellipse
             Vector2 pointZ = MathHelper.FindIntersection(pointM, pointX - pointM, pointN, pointY - pointN);
-            if(Vector2.IsNaN(pointZ))
+            if (Vector2.IsNaN(pointZ))
             {
                 Debug.Assert(false, "The transformation cannot be applied.");
                 return;
             }
-            
+
             Vector3 oldNormal = this.Normal;
             double oldRotation = this.Rotation * MathHelper.DegToRad;
 
@@ -679,11 +672,11 @@ namespace netDxf.Entities
             Ellipse entity = new Ellipse
             {
                 //EntityObject properties
-                Layer = (Layer) this.Layer.Clone(),
-                Linetype = (Linetype) this.Linetype.Clone(),
-                Color = (AciColor) this.Color.Clone(),
+                Layer = (Layer)this.Layer.Clone(),
+                Linetype = (Linetype)this.Linetype.Clone(),
+                Color = (AciColor)this.Color.Clone(),
                 Lineweight = this.Lineweight,
-                Transparency = (Transparency) this.Transparency.Clone(),
+                Transparency = (Transparency)this.Transparency.Clone(),
                 LinetypeScale = this.LinetypeScale,
                 Normal = this.Normal,
                 IsVisible = this.IsVisible,
@@ -699,7 +692,7 @@ namespace netDxf.Entities
 
             foreach (XData data in this.XData.Values)
             {
-                entity.XData.Add((XData) data.Clone());
+                entity.XData.Add((XData)data.Clone());
             }
 
             return entity;

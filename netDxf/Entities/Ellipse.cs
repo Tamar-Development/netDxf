@@ -524,21 +524,19 @@ namespace netDxf.Entities
             Vector2 normalized = new Vector2(point.X - Center.X,
                                          point.Y - Center.Y);
 
-            bool onEllipse= ((double)(normalized.X * normalized.X)
-                     / (_xRadius * _xRadius)) + ((double)(normalized.Y * normalized.Y) / (_yRadius * _yRadius))
-                <= 1.0;
+            double diff = ((double)(normalized.X * normalized.X)
+                     / (_xRadius * _xRadius)) + ((double)(normalized.Y * normalized.Y) / (_yRadius * _yRadius));
+              
+            bool onEllipse= diff <= 1.0+MathHelper.Epsilon;
 
             if (onEllipse)
             {
                 double point_angle = this.CoordinateToAngle(point);
                 if (this.StartAngle > this.EndAngle)// if start angle is grater than end angle add 360
-                {
-                    return this.StartAngle < point_angle && (this.EndAngle + 360) > point_angle;
-                }
+                    return MathHelper.IsValueBetween(this.StartAngle, (this.EndAngle + 360), point_angle, MathHelper.Epsilon);
                 else
-                {
-                    return this.StartAngle < point_angle && (this.EndAngle) > point_angle;
-                }
+                    return MathHelper.IsValueBetween(this.StartAngle, this.EndAngle, point_angle, MathHelper.Epsilon);
+                
             }
             return false;
         }

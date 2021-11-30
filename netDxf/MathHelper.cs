@@ -669,6 +669,19 @@ namespace netDxf
             obj2 = tmp;
         }
 
+        public static bool IsValueBetween(double min,double max,double val,double treshold)
+        {
+            bool min_condition = val - min >= 0;
+            if (!min_condition)
+                min_condition = Math.Abs(val - min) < treshold;
+            
+
+            bool max_condition = max - val >= 0;
+            if (!max_condition)
+                max_condition = Math.Abs(max - val) < treshold;
+            return min_condition && max_condition;
+        }
+
         #endregion
     }
 }

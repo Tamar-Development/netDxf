@@ -79,7 +79,7 @@ namespace netDxf
 
         #region public properties
 
-        private static double epsilon = (1e-12)*1000;
+        private static double epsilon = (1e-2);
 
         /// <summary>
         /// Represents the smallest number used for comparison purposes.

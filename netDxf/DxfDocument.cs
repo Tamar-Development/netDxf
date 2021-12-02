@@ -859,6 +859,7 @@ namespace netDxf
                     this.blocks.References[insert.Block.Name].Add(insert);
                     //DrawingUnits insUnits = this.DrawingVariables.InsUnits;
                     //double docScale = UnitHelper.ConversionFactor(insert.Block.Record.Units, insUnits);
+                    
                     foreach (Attribute attribute in insert.Attributes)
                     {
                         //if (assignHandle && attribute.Definition != null)

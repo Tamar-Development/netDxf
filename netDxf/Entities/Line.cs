@@ -113,6 +113,10 @@ namespace netDxf.Entities
             set { this.thickness = value; }
         }
 
+        public double Length
+        {
+            get { return Vector3.Distance(this.StartPoint, this.EndPoint); }
+        }
         #endregion
 
         #region public properties
@@ -159,11 +163,11 @@ namespace netDxf.Entities
             Line entity = new Line
             {
                 //EntityObject properties
-                Layer = (Layer) this.Layer.Clone(),
-                Linetype = (Linetype) this.Linetype.Clone(),
-                Color = (AciColor) this.Color.Clone(),
+                Layer = (Layer)this.Layer.Clone(),
+                Linetype = (Linetype)this.Linetype.Clone(),
+                Color = (AciColor)this.Color.Clone(),
                 Lineweight = this.Lineweight,
-                Transparency = (Transparency) this.Transparency.Clone(),
+                Transparency = (Transparency)this.Transparency.Clone(),
                 LinetypeScale = this.LinetypeScale,
                 Normal = this.Normal,
                 IsVisible = this.IsVisible,
@@ -175,7 +179,7 @@ namespace netDxf.Entities
 
             foreach (XData data in this.XData.Values)
             {
-                entity.XData.Add((XData) data.Clone());
+                entity.XData.Add((XData)data.Clone());
             }
 
             return entity;

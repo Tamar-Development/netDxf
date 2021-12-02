@@ -407,10 +407,10 @@ namespace netDxf.Entities
             Vector2 v1 = new Vector2(1, 0);
             double degAngle = Vector2.AngleBetween(pointRelativeToCenter, v1) * MathHelper.RadToDeg;
 
-            if (pointRelativeToCenter.X <= 0 && pointRelativeToCenter.Y <= 0) //if point is on the third qurter we need to get the opposite  angle
+            if (pointRelativeToCenter.X <= 0 && pointRelativeToCenter.Y < 0) //if point is on the third qurter we need to get the opposite  angle
                 degAngle = 360 - degAngle;
 
-            if (pointRelativeToCenter.X >= 0 && pointRelativeToCenter.Y <= 0) //if point is on the fourth qurter we need to add 270 deg and add 90-angle
+            else if (pointRelativeToCenter.X > 0 && pointRelativeToCenter.Y < 0) //if point is on the fourth qurter we need to add 270 deg and add 90-angle
                 degAngle = 270 + (90 - degAngle);
 
             return degAngle;

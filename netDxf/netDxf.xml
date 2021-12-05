@@ -5458,6 +5458,20 @@
             <param name="precision">Number of vertexes generated.</param>
             <returns>A new instance of <see cref="T:netDxf.Entities.LwPolyline">LightWeightPolyline</see> that represents the ellipse.</returns>
         </member>
+        <member name="M:netDxf.Entities.Ellipse.Contains(netDxf.Vector2)">
+            <summary>
+            Checks if a point is on the ellipse part (within the angles)
+            </summary>
+            <param name="point"></param>
+            <returns></returns>
+        </member>
+        <member name="M:netDxf.Entities.Ellipse.Contains(System.Double)">
+            <summary>
+            Checks if an angle is within the ellipse angles
+            </summary>
+            <param name="angle"></param>
+            <returns></returns>
+        </member>
         <member name="M:netDxf.Entities.Ellipse.TransformBy(netDxf.Matrix3,netDxf.Vector3)">
             <summary>
             Moves, scales, and/or rotates the current entity given a 3x3 transformation matrix and a translation vector.

@@ -105,7 +105,7 @@ namespace netDxf
         /// </summary>
         public static Vector2 UnitX
         {
-            get { return new Vector2(1.0, 0.0) {isNormalized = true}; }
+            get { return new Vector2(1.0, 0.0) { isNormalized = true }; }
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace netDxf
         /// </summary>
         public static Vector2 UnitY
         {
-            get { return new Vector2(0.0, 1.0) {isNormalized = true}; }
+            get { return new Vector2(0.0, 1.0) { isNormalized = true }; }
         }
 
         /// <summary>
@@ -197,6 +197,12 @@ namespace netDxf
             get { return this.isNormalized; }
         }
 
+
+        public double[] Coordinates
+        {
+            get { return new[] { this.X, this.Y }; }
+        }
+
         #endregion
 
         #region static methods
@@ -219,7 +225,7 @@ namespace netDxf
         /// <returns>The dot product.</returns>
         public static double DotProduct(Vector2 u, Vector2 v)
         {
-            return u.X*v.X + u.Y*v.Y;
+            return u.X * v.X + u.Y * v.Y;
         }
 
         /// <summary>
@@ -230,7 +236,7 @@ namespace netDxf
         /// <returns>Vector2.</returns>
         public static double CrossProduct(Vector2 u, Vector2 v)
         {
-            return u.X*v.Y - u.Y*v.X;
+            return u.X * v.Y - u.Y * v.X;
         }
 
         /// <summary>
@@ -240,7 +246,7 @@ namespace netDxf
         /// <returns>Vector2.</returns>
         public static Vector2 Perpendicular(Vector2 u)
         {
-            return new Vector2(-u.Y, u.X) {isNormalized = u.IsNormalized};
+            return new Vector2(-u.Y, u.X) { isNormalized = u.IsNormalized };
         }
 
         /// <summary>
@@ -266,7 +272,7 @@ namespace netDxf
         public static Vector2 Polar(Vector2 u, double distance, double angle)
         {
             Vector2 dir = new Vector2(Math.Cos(angle), Math.Sin(angle));
-            return u + dir*distance;
+            return u + dir * distance;
         }
 
         /// <summary>
@@ -427,7 +433,7 @@ namespace netDxf
             }
 
             double modInv = 1 / mod;
-            return new Vector2(u.x * modInv, u.y * modInv) {isNormalized = true};
+            return new Vector2(u.x * modInv, u.y * modInv) { isNormalized = true };
         }
 
         #endregion
@@ -517,7 +523,7 @@ namespace netDxf
         /// <returns>The negative vector of u.</returns>
         public static Vector2 Negate(Vector2 u)
         {
-            return new Vector2(-u.X, -u.Y) {isNormalized = u.IsNormalized};
+            return new Vector2(-u.X, -u.Y) { isNormalized = u.IsNormalized };
         }
 
         /// <summary>
@@ -528,7 +534,7 @@ namespace netDxf
         /// <returns>The multiplication of u times a.</returns>
         public static Vector2 operator *(Vector2 u, double a)
         {
-            return new Vector2(u.X*a, u.Y*a);
+            return new Vector2(u.X * a, u.Y * a);
         }
 
         /// <summary>
@@ -539,7 +545,7 @@ namespace netDxf
         /// <returns>The multiplication of u times a.</returns>
         public static Vector2 Multiply(Vector2 u, double a)
         {
-            return new Vector2(u.X*a, u.Y*a);
+            return new Vector2(u.X * a, u.Y * a);
         }
 
         /// <summary>
@@ -550,7 +556,7 @@ namespace netDxf
         /// <returns>The multiplication of u times a.</returns>
         public static Vector2 operator *(double a, Vector2 u)
         {
-            return new Vector2(u.X*a, u.Y*a);
+            return new Vector2(u.X * a, u.Y * a);
         }
 
         /// <summary>
@@ -561,7 +567,7 @@ namespace netDxf
         /// <returns>The multiplication of u times a.</returns>
         public static Vector2 Multiply(double a, Vector2 u)
         {
-            return new Vector2(u.X*a, u.Y*a);
+            return new Vector2(u.X * a, u.Y * a);
         }
 
         /// <summary>
@@ -594,8 +600,8 @@ namespace netDxf
         /// <returns>The division of u times a.</returns>
         public static Vector2 operator /(Vector2 u, double a)
         {
-            double invScalar = 1/a;
-            return new Vector2(u.X*invScalar, u.Y*invScalar);
+            double invScalar = 1 / a;
+            return new Vector2(u.X * invScalar, u.Y * invScalar);
         }
 
         /// <summary>
@@ -606,8 +612,8 @@ namespace netDxf
         /// <returns>The division of u times a.</returns>
         public static Vector2 Divide(Vector2 u, double a)
         {
-            double invScalar = 1/a;
-            return new Vector2(u.X*invScalar, u.Y*invScalar);
+            double invScalar = 1 / a;
+            return new Vector2(u.X * invScalar, u.Y * invScalar);
         }
 
         /// <summary>
@@ -653,7 +659,7 @@ namespace netDxf
             }
             else
             {
-                double modInv = 1/mod;
+                double modInv = 1 / mod;
                 this.x *= modInv;
                 this.y *= modInv;
             }
@@ -675,7 +681,12 @@ namespace netDxf
         /// <returns>Array.</returns>
         public double[] ToArray()
         {
-            return new[] {this.x, this.y};
+            return new[] { this.x, this.y };
+        }
+
+        public double Distance(Vector2 p)
+        {
+            return Vector2.Distance(p, this);
         }
 
         #endregion

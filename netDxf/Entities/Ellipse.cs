@@ -34,7 +34,7 @@ namespace netDxf.Entities
     /// Represents an ellipse <see cref="EntityObject">entity</see>.
     /// </summary>
     public class Ellipse :
-        EntityObject
+        EntityObject, IEquatable<Ellipse>
     {
         #region private classes
 
@@ -506,7 +506,11 @@ namespace netDxf.Entities
             return poly;
         }
 
-
+        /// <summary>
+        /// Checks if a point is on the ellipse part (within the angles)
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public bool Contains(Vector2 point)
         {
 
@@ -541,6 +545,22 @@ namespace netDxf.Entities
             return false;
         }
 
+        /// <summary>
+        /// Checks if an angle is within the ellipse angles
+        /// </summary>
+        /// <param name="angle"></param>
+        /// <returns></returns>
+        public bool Contains(double angle)
+        {
+            double start = this.StartAngle;
+            double end = this.EndAngle;
+            if (start > end )
+            {
+                end += 360;
+            }
+           
+            return MathHelper.IsValueBetween(start ,end ,angle,MathHelper.Epsilon);
+        }
         #endregion
 
         #region overrides
@@ -708,6 +728,23 @@ namespace netDxf.Entities
             }
 
             return entity;
+        }
+
+       
+        public bool Equals(Ellipse e)
+        {
+            if (e == null)
+                return false;
+          
+            if (e.GetHashCode() == this.GetHashCode())
+                return true;
+
+            
+            bool cond1 = this.Center.Equals(e.Center);
+            bool cond2 = MathHelper.IsEqual(this.MajorAxis, e.MajorAxis);
+            bool cond3 = MathHelper.IsEqual(this.MinorAxis, e.MinorAxis);
+            bool cond4 = MathHelper.IsEqual(this.StartAngle, e.StartAngle) && MathHelper.IsEqual(this.EndAngle, e.EndAngle);
+            return cond1 && cond2 && cond3 && cond4;
         }
 
         #endregion

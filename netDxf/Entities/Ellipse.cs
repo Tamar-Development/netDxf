@@ -475,6 +475,16 @@ namespace netDxf.Entities
             return points;
         }
 
+        public double AngleSize()
+        {
+            double start = StartAngle;
+            double end = EndAngle;
+            if (start > end)
+                end += 360;
+            return end - start;
+        }
+
+
         /// <summary>
         /// Converts the ellipse in a Polyline.
         /// </summary>

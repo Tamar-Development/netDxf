@@ -435,7 +435,13 @@ namespace netDxf
             double modInv = 1 / mod;
             return new Vector2(u.x * modInv, u.y * modInv) { isNormalized = true };
         }
-
+        public static Vector2 Abs(Vector2 c0)
+        {
+            Vector2 c = new Vector2();
+            c.x = Math.Abs(c0.x);
+            c.y = Math.Abs(c0.y);
+            return c;
+        }
         #endregion
 
         #region overloaded operators
@@ -515,7 +521,13 @@ namespace netDxf
         {
             return new Vector2(-u.X, -u.Y) { isNormalized = u.IsNormalized };
         }
-
+        public static Vector2 operator -(Vector2 c0, double s)
+        {
+            Vector2 c = new Vector2();
+            c.x = c0.x - s;
+            c.y = c0.y - s;
+            return c;
+        }
         /// <summary>
         /// Negates a vector.
         /// </summary>
@@ -638,13 +650,24 @@ namespace netDxf
             return new Vector2(u.X / v.X, u.Y / v.Y);
         }
 
+        public static bool operator <(Vector2 c, double s)
+        {
+            return c.x < s && c.y < s;
+        }
+        public static bool operator >(Vector2 c, double s)
+        {
+            return c.x > s && c.y > s;
+        }
+
         #endregion
 
         #region public methods
 
+        
         /// <summary>
         /// Normalizes the vector.
         /// </summary>
+
         public void Normalize()
         {
             if (this.isNormalized)

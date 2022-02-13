@@ -442,6 +442,7 @@ namespace netDxf
             c.y = Math.Abs(c0.y);
             return c;
         }
+        
         #endregion
 
         #region overloaded operators
@@ -712,6 +713,10 @@ namespace netDxf
             return Vector2.Distance(p, this);
         }
 
+        public  Vector2 ClonePoint()
+        {
+            return new Vector2(this.X, this.Y);
+        }
         #endregion
 
         #region comparison methods

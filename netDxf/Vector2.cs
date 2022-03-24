@@ -24,8 +24,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
-
+using System.Linq;
 namespace netDxf
 {
     /// <summary>
@@ -717,6 +718,15 @@ namespace netDxf
         {
             return new Vector2(this.X, this.Y);
         }
+        public Vector2 ClosestPoint(params Vector2[] points)
+        {
+            List<Vector2> pointList = points.ToList();
+            Vector2 thispoint = this;
+            pointList.OrderBy(x => thispoint.Distance(x));
+            return pointList[0];
+        }
+        
+
         #endregion
 
         #region comparison methods

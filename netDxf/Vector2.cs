@@ -722,7 +722,7 @@ namespace netDxf
         {
             List<Vector2> pointList = points.ToList();
             Vector2 thispoint = this;
-            pointList.OrderBy(v2 => thispoint.Distance(v2));
+            pointList = pointList.OrderBy(v2 => thispoint.Distance(v2)).ToList();
             return pointList[0];
         }
         

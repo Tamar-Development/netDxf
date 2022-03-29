@@ -3840,10 +3840,10 @@ namespace netDxf.IO
                     dxfObject = this.ReadLeader();
                     break;
                 case DxfObjectCode.Line:
-                    dxfObject = this.ReadLine(ref linetype);
+                    dxfObject = this.ReadLine(ref linetype,ref isVisible);
                     break;
                 case DxfObjectCode.LwPolyline:
-                    dxfObject = this.ReadLwPolyline();
+                    dxfObject = this.ReadLwPolyline(ref linetype,ref isVisible);
                     break;
                 case DxfObjectCode.Mesh:
                     dxfObject = this.ReadMesh();
@@ -7867,7 +7867,7 @@ namespace netDxf.IO
             return insert;
         }
 
-        private Line ReadLine(ref Linetype linetype)
+        private Line ReadLine(ref Linetype linetype, ref bool isVisible)
         {
             Vector3 start = Vector3.Zero;
             Vector3 end = Vector3.Zero;
@@ -7880,6 +7880,10 @@ namespace netDxf.IO
             {
                 switch (this.chunk.Code)
                 {
+                    case 60: //object visibility
+                        isVisible = this.chunk.ReadShort() == 0;
+                        this.chunk.Next();
+                        break;
                     case 6: //type line code
                         string linetypeName = this.DecodeEncodedNonAsciiCharacters(this.chunk.ReadString());
                         linetype = this.GetLinetype(linetypeName);
@@ -8242,7 +8246,7 @@ namespace netDxf.IO
             return segments;
         }
 
-        private LwPolyline ReadLwPolyline()
+        private LwPolyline ReadLwPolyline(ref Linetype linetype, ref bool isVisible)
         {
             double elevation = 0.0;
             double thickness = 0.0;
@@ -8261,6 +8265,15 @@ namespace netDxf.IO
             {
                 switch (this.chunk.Code)
                 {
+                    case 60: //object visibility
+                        isVisible = this.chunk.ReadShort() == 0;
+                        this.chunk.Next();
+                        break;
+                    case 6: //type line code
+                        string linetypeName = this.DecodeEncodedNonAsciiCharacters(this.chunk.ReadString());
+                        linetype = this.GetLinetype(linetypeName);
+                        this.chunk.Next();
+                        break;
                     case 38:
                         elevation = this.chunk.ReadDouble();
                         this.chunk.Next();
@@ -8373,6 +8386,7 @@ namespace netDxf.IO
             List<XData> xData = new List<XData>();
             
             this.chunk.Next();
+           
 
             while (this.chunk.Code != 0)
             {

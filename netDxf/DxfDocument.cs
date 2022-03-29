@@ -523,7 +523,7 @@ namespace netDxf
 
             Stream stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-            DxfReader dxfReader = new DxfReader();
+              DxfReader dxfReader = new DxfReader();
 
 #if DEBUG
             DxfDocument document = dxfReader.Read(stream, supportFolders);

@@ -964,7 +964,7 @@ namespace netDxf.IO
         }
 
         private void ReadEntities()
-        {
+          {
             Debug.Assert(this.chunk.ReadString() == DxfObjectCode.EntitiesSection);
 
             this.chunk.Next();
@@ -3840,7 +3840,7 @@ namespace netDxf.IO
                     dxfObject = this.ReadLeader();
                     break;
                 case DxfObjectCode.Line:
-                    dxfObject = this.ReadLine();
+                    dxfObject = this.ReadLine(ref linetype);
                     break;
                 case DxfObjectCode.LwPolyline:
                     dxfObject = this.ReadLwPolyline();
@@ -7867,7 +7867,7 @@ namespace netDxf.IO
             return insert;
         }
 
-        private Line ReadLine()
+        private Line ReadLine(ref Linetype linetype)
         {
             Vector3 start = Vector3.Zero;
             Vector3 end = Vector3.Zero;
@@ -7880,6 +7880,11 @@ namespace netDxf.IO
             {
                 switch (this.chunk.Code)
                 {
+                    case 6: //type line code
+                        string linetypeName = this.DecodeEncodedNonAsciiCharacters(this.chunk.ReadString());
+                        linetype = this.GetLinetype(linetypeName);
+                        this.chunk.Next();
+                        break;
                     case 10:
                         start.X = this.chunk.ReadDouble();
                         this.chunk.Next();

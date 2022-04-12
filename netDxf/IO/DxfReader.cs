@@ -3834,16 +3834,16 @@ namespace netDxf.IO
                     dxfObject = this.ReadImage();
                     break;
                 case DxfObjectCode.Insert:
-                    dxfObject = this.ReadInsert(isBlockEntity);
+                    dxfObject = this.ReadInsert(isBlockEntity, ref color);
                     break;
                 case DxfObjectCode.Leader:
                     dxfObject = this.ReadLeader();
                     break;
                 case DxfObjectCode.Line:
-                    dxfObject = this.ReadLine(ref linetype,ref isVisible);
+                    dxfObject = this.ReadLine(ref linetype,ref isVisible,ref color);
                     break;
                 case DxfObjectCode.LwPolyline:
-                    dxfObject = this.ReadLwPolyline(ref linetype,ref isVisible);
+                    dxfObject = this.ReadLwPolyline(ref linetype,ref isVisible, ref color);
                     break;
                 case DxfObjectCode.Mesh:
                     dxfObject = this.ReadMesh();
@@ -7730,7 +7730,7 @@ namespace netDxf.IO
             return entity;
         }
 
-        private Insert ReadInsert(bool isBlockEntity)
+        private Insert ReadInsert(bool isBlockEntity, ref AciColor color)
         {
             Vector3 basePoint = Vector3.Zero;
             Vector3 normal = Vector3.UnitZ;
@@ -7746,6 +7746,14 @@ namespace netDxf.IO
             {
                 switch (this.chunk.Code)
                 {
+                    case 62: //ACI color code
+                        if (!color.UseTrueColor)
+                        {
+                            color = AciColor.FromCadIndex(this.chunk.ReadShort());
+                        }
+                        this.chunk.Next();
+                        break;
+
                     case 2:
                         blockName = this.DecodeEncodedNonAsciiCharacters(this.chunk.ReadString());
                         if (!isBlockEntity)
@@ -7867,7 +7875,7 @@ namespace netDxf.IO
             return insert;
         }
 
-        private Line ReadLine(ref Linetype linetype, ref bool isVisible)
+        private Line ReadLine(ref Linetype linetype, ref bool isVisible, ref AciColor color)
         {
             Vector3 start = Vector3.Zero;
             Vector3 end = Vector3.Zero;
@@ -7880,6 +7888,14 @@ namespace netDxf.IO
             {
                 switch (this.chunk.Code)
                 {
+                    case 62: //ACI color code
+                        if (!color.UseTrueColor)
+                        {
+                            color = AciColor.FromCadIndex(this.chunk.ReadShort());
+                        }
+                        this.chunk.Next();
+                        break;
+
                     case 60: //object visibility
                         isVisible = this.chunk.ReadShort() == 0;
                         this.chunk.Next();
@@ -8246,7 +8262,7 @@ namespace netDxf.IO
             return segments;
         }
 
-        private LwPolyline ReadLwPolyline(ref Linetype linetype, ref bool isVisible)
+        private LwPolyline ReadLwPolyline(ref Linetype linetype, ref bool isVisible, ref AciColor color)
         {
             double elevation = 0.0;
             double thickness = 0.0;
@@ -8265,6 +8281,14 @@ namespace netDxf.IO
             {
                 switch (this.chunk.Code)
                 {
+                    case 62: //ACI color code
+                        if (!color.UseTrueColor)
+                        {
+                            color = AciColor.FromCadIndex(this.chunk.ReadShort());
+                        }
+                        this.chunk.Next();
+                        break;
+
                     case 60: //object visibility
                         isVisible = this.chunk.ReadShort() == 0;
                         this.chunk.Next();

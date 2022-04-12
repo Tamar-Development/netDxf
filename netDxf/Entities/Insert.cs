@@ -438,10 +438,11 @@ namespace netDxf.Entities
                             Circle circle = (Circle) entity;
                             Ellipse ellipse = new Ellipse
                             {
+                                
                                 //EntityObject properties
-                                Layer = (Layer) entity.Layer.Clone(),
+                                Layer = (Layer) this.Layer.Clone(),
                                 Linetype = (Linetype) entity.Linetype.Clone(),
-                                Color = (AciColor) entity.Color.Clone(),
+                                Color = GetColor(entity),
                                 Lineweight = entity.Lineweight,
                                 Transparency = (Transparency) entity.Transparency.Clone(),
                                 LinetypeScale = entity.LinetypeScale,
@@ -464,9 +465,9 @@ namespace netDxf.Entities
                             Ellipse ellipse = new Ellipse
                             {
                                 //EntityObject properties
-                                Layer = (Layer) entity.Layer.Clone(),
+                                Layer = (Layer) this.Layer.Clone(),
                                 Linetype = (Linetype) entity.Linetype.Clone(),
-                                Color = (AciColor) entity.Color.Clone(),
+                                Color = GetColor(entity),
                                 Lineweight = entity.Lineweight,
                                 Transparency = (Transparency) entity.Transparency.Clone(),
                                 LinetypeScale = entity.LinetypeScale,
@@ -487,6 +488,7 @@ namespace netDxf.Entities
                         }
                         case EntityType.LwPolyline:
                         {
+                            entity.Layer = (Layer)this.Layer.Clone();
                             List<EntityObject> newEntities = ((LwPolyline) entity).Explode();
                             foreach (EntityObject newEntity in newEntities)
                             {
@@ -496,9 +498,9 @@ namespace netDxf.Entities
                                     Ellipse ellipse = new Ellipse
                                     {
                                         //EntityObject properties
-                                        Layer = (Layer) entity.Layer.Clone(),
+                                        Layer = (Layer) this.Layer.Clone(),
                                         Linetype = (Linetype) entity.Linetype.Clone(),
-                                        Color = (AciColor) entity.Color.Clone(),
+                                        Color = GetColor(entity),
                                         Lineweight = entity.Lineweight,
                                         Transparency = (Transparency) entity.Transparency.Clone(),
                                         LinetypeScale = entity.LinetypeScale,
@@ -518,6 +520,7 @@ namespace netDxf.Entities
                                 }
                                 else
                                 {
+                                    newEntity.Color = GetColor(entity);
                                     newEntity.TransformBy(transformation, translation);
                                     entities.Add(newEntity);
                                 }                                
@@ -537,7 +540,7 @@ namespace netDxf.Entities
                                         //EntityObject properties
                                         Layer = (Layer) entity.Layer.Clone(),
                                         Linetype = (Linetype) entity.Linetype.Clone(),
-                                        Color = (AciColor) entity.Color.Clone(),
+                                        Color = GetColor(entity),
                                         Lineweight = entity.Lineweight,
                                         Transparency = (Transparency) entity.Transparency.Clone(),
                                         LinetypeScale = entity.LinetypeScale,
@@ -613,6 +616,18 @@ namespace netDxf.Entities
 
         #endregion
 
+        private AciColor GetColor(EntityObject entityObject)
+        {
+
+            var blockColor = this.Color;
+            if (blockColor.IsByBlock)
+                blockColor = AciColor.ByLayer;
+
+            if (entityObject.Color.IsByBlock)
+                return (AciColor)blockColor.Clone();
+
+            return (AciColor)entityObject.Color.Clone();
+        }
         #region overrides
 
         /// <summary>

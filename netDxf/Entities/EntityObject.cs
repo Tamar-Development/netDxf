@@ -133,6 +133,21 @@ namespace netDxf.Entities
             }
         }
 
+        public AciColor ColorValue
+        {
+            get {
+                if (Color.IsByLayer)
+                {
+                    return Layer.Color;
+                }
+                else if (Color.IsByBlock)
+                {
+
+                }
+                return this.color; 
+            }
+            
+        }
         /// <summary>
         /// Gets or sets the entity <see cref="Layer">layer</see>.
         /// </summary>
